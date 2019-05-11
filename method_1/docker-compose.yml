@@ -1,0 +1,73 @@
+version: '3.5'
+services:
+
+  nginx-proxy:
+    image: jwilder/nginx-proxy:alpine
+    restart: always
+    container_name: nginx-proxy
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - /var/run/docker.sock:/tmp/docker.sock:ro
+      - html:/usr/share/nginx/html
+      - dhparam:/etc/nginx/dhparam
+      - vhost:/etc/nginx/vhost.d
+      - certs:/etc/nginx/certs:ro
+
+  nginx-proxy-letsencrypt:
+    image: jrcs/letsencrypt-nginx-proxy-companion
+    restart: always
+    depends_on:
+      - "nginx-proxy"
+    volumes:
+      - certs:/etc/nginx/certs
+      - vhost:/etc/nginx/vhost.d
+      - html:/usr/share/nginx/html
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    environment:
+      - ACME_CA_URI=https://acme-staging.api.letsencrypt.org/directory
+      - NGINX_PROXY_CONTAINER=nginx-proxy
+
+  nginx:
+    container_name: nginx-container
+    build: ./nginx
+    restart: always
+    volumes:
+      - api_data:/docker_api
+      - ./log:/var/log/nginx
+    depends_on:
+      - api
+    environment:
+      - VIRTUAL_HOST=twtrubiks.com.tw
+      - VIRTUAL_NETWORK=nginx-proxy
+      - VIRTUAL_PORT=80
+      - LETSENCRYPT_HOST=twtrubiks.com.tw
+      - LETSENCRYPT_EMAIL=xxxx@gmail.com
+
+  api:
+    container_name: api-container
+    build: ./api
+    restart: always
+    command: uwsgi --ini uwsgi.ini
+    volumes:
+      - api_data:/docker_api
+    depends_on:
+      - db
+
+  db:
+    container_name: postgres
+    image: postgres
+    environment:
+      POSTGRES_PASSWORD: password123
+    volumes:
+      - pgdata:/var/lib/postgresql/data/
+
+volumes:
+  certs:
+  html:
+  vhost:
+  dhparam:
+  api_data:
+  pgdata:
+
