@@ -29,8 +29,9 @@ services:
       - html:/usr/share/nginx/html
       - /var/run/docker.sock:/var/run/docker.sock:ro
     environment:
-      - ACME_CA_URI=https://acme-staging.api.letsencrypt.org/directory
+      - ACME_CA_URI=https://acme-staging-v02.api.letsencrypt.org/directory
       - NGINX_PROXY_CONTAINER=nginx-proxy
+      - DEFAULT_EMAIL=xxx@xxx.xxx
     networks:
       - proxy
 

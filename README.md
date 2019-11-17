@@ -59,8 +59,9 @@ services:
       - html:/usr/share/nginx/html
       - /var/run/docker.sock:/var/run/docker.sock:ro
     environment:
-      - ACME_CA_URI=https://acme-staging.api.letsencrypt.org/directory
+      - ACME_CA_URI=https://acme-staging-v02.api.letsencrypt.org/directory
       - NGINX_PROXY_CONTAINER=nginx-proxy
+      - DEFAULT_EMAIL=xxx@xxx.xxx
 
   nginx:
     container_name: nginx-container
@@ -81,7 +82,7 @@ services:
   ......
 ```
 
-以下稍微說明一下，首先是 `ACME_CA_URI=https://acme-staging.api.letsencrypt.org/directory`，
+以下稍微說明一下，首先是 `ACME_CA_URI=https://acme-staging-v02.api.letsencrypt.org/directory`，
 
 這個的目的就是測試用 ( staging )，詳細以及一些限制可參考 [Staging Environment](https://letsencrypt.org/docs/staging-environment/)，
 
@@ -221,6 +222,16 @@ docker-compose up
 如果設定都正確，你可以點選 https://twtrubiks.com.tw 會正常 work。
 
 ( 如果出現不安全，代表有問題 )
+
+## 補充：
+
+也可以進去 [docker-letsencrypt-nginx-proxy-companion](https://github.com/JrCs/docker-letsencrypt-nginx-proxy-companion) 的容器中，找到 start.sh，
+
+執行 `./start.sh` 測試 https。
+
+letsencrypt 的 challenge 有很多種方式，在這裡是使用 **HTTP-01 challenge**，其他
+
+的 challenge 方式可參考 [challenge-types](https://letsencrypt.org/zh-tw/docs/challenge-types/)。
 
 ## 後記：
 
