@@ -47,6 +47,8 @@ services:
       - dhparam:/etc/nginx/dhparam
       - vhost:/etc/nginx/vhost.d
       - certs:/etc/nginx/certs:ro
+      - ./custom_nginx.tmpl:/app/nginx.tmpl
+      - ./nginx_log:/var/log/nginx
 
   nginx-proxy-letsencrypt:
     image: jrcs/letsencrypt-nginx-proxy-companion
@@ -101,7 +103,15 @@ environment:
 
 這邊先假設你的主機 ip 是 123.456.789，請先去幫他加上一個 domain，例如，我今天的 domain 是 twtrubiks.com.tw，
 
-就把他分別設定到 VIRTUAL_HOST 以及 LETSENCRYPT_HOST，LETSENCRYPT_EMAIL 則填上自己的 e-mail。
+就把他分別設定到 VIRTUAL_HOST 以及 LETSENCRYPT_HOST，LETSENCRYPT_EMAIL 則填上自己的 e-mail.
+
+如果想要把 nginx log 同步到本機, 直接加上 `./nginx_log:/var/log/nginx` 即可.
+
+如果想要修改 nginx log 的格式, 請直接到 [custom_nginx.tmpl](https://github.com/twtrubiks/docker-letsencrypt-django-nginx-proxy-uwsgi-postgres/blob/master/method_1/custom_nginx.tmpl) 底下修改, 然後再加上
+
+`- ./custom_nginx.tmpl:/app/nginx.tmpl` 即可.
+
+原始的 [nginx.tmpl](https://github.com/nginx-proxy/docker-gen/blob/main/templates/nginx.tmpl) 可到這裡查詢.
 
 #### 執行方法
 
