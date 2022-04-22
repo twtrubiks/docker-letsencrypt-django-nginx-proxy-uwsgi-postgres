@@ -105,13 +105,32 @@ environment:
 
 就把他分別設定到 VIRTUAL_HOST 以及 LETSENCRYPT_HOST，LETSENCRYPT_EMAIL 則填上自己的 e-mail.
 
+#### 將 nginx log 同步到本機
+
 如果想要把 nginx log 同步到本機, 直接加上 `./nginx_log:/var/log/nginx` 即可.
 
-如果想要修改 nginx log 的格式, 請直接到 [custom_nginx.tmpl](https://github.com/twtrubiks/docker-letsencrypt-django-nginx-proxy-uwsgi-postgres/blob/master/method_1/custom_nginx.tmpl) 底下修改, 然後再加上
+如果想要修改 nginx log 的格式, 請直接到 [custom_nginx.tmpl](https://github.com/twtrubiks/docker-letsencrypt-django-nginx-proxy-uwsgi-postgres/blob/master/method_1/custom_nginx.tmpl) 底下修改,
+
+然後在 `docker-compose.yml` 加上,
 
 `- ./custom_nginx.tmpl:/app/nginx.tmpl` 即可.
 
 原始的 [nginx.tmpl](https://github.com/nginx-proxy/docker-gen/blob/main/templates/nginx.tmpl) 可到這裡查詢.
+
+#### nginx 設定 html
+
+修改 `my_nginx.conf` 加上一個位置, 並且指定你的 html 路徑
+
+```conf
+location /test {
+    root /usr/share/nginx/html;
+    index index.html;
+}
+```
+
+之後將你的 html 放入 `/usr/share/nginx/html/test` 即可,
+
+最後重啟 nginx, 瀏覽 `https://twtrubiks.com.tw/test/` 就會看到你的 html.
 
 #### 執行方法
 
