@@ -1,0 +1,15 @@
+#location / {
+#        root /usr/share/nginx/html;
+#        index index.html index.htm index.php;
+#}
+
+location /nginx_status {
+
+    stub_status on;
+    access_log off;
+    # access_log /usr/local/nginx/logs/status.log;
+    # auth_basic "NginxStatus";
+
+    #allow xx.xxx.xx.xx;
+    #deny all;
+}

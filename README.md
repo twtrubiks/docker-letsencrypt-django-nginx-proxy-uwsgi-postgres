@@ -232,6 +232,10 @@ networks:
 
 一樣注意 networks 的部分，這邊多了 `external`，代表說我要用外部的 networks，如果找不到會報錯。
 
+### 範例
+
+[example](example)
+
 #### 執行方法
 
 先執行
